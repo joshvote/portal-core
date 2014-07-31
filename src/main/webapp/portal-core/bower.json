@@ -1,0 +1,14 @@
+{
+  "name": "portal-core",
+  "version": "1.1.0-SNAPSHOT",
+  "homepage": "https://github.com/joshvote/portal-core",
+  "description": "Portal core web resources",
+  "license": "LGPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
