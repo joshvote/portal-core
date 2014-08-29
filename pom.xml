@@ -226,19 +226,19 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
             </plugin>
-            
-            
-            
+
+
+
         </plugins>
         <resources>
-         <resource>
-           <directory>src/main/resources</directory>
-         </resource>
-         <resource>
-           <directory>src/main/webapp</directory>
-         </resource>
-       </resources>
-    
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+            </resource>
+        </resources>
+
     </build>
     <reporting>
         <plugins>
@@ -363,14 +363,14 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-           <groupId>org.springframework</groupId>
-           <artifactId>spring-orm</artifactId>
-           <version>${spring.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
-          <groupId>com.racquettrack</groupId>
-          <artifactId>spring-security-oauth2-client</artifactId>
-          <version>1.2-SNAPSHOT</version>
+            <groupId>com.racquettrack</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.sf.json-lib</groupId>
@@ -465,7 +465,7 @@
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
         </dependency>-->
-         <dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.2.5</version>
@@ -534,15 +534,15 @@
             <version>1.5.2</version>
         </dependency>
         <dependency>
-          <groupId>org.apache.jena</groupId>
-          <artifactId>jena-arq</artifactId>
-          <version>2.9.4</version>
-          <exclusions>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>2.9.4</version>
+            <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>jcl-over-slf4j</artifactId>
                 </exclusion>
-          </exclusions>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.racquettrack</groupId>
