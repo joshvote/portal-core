@@ -1,43 +1,34 @@
 package org.auscope.portal.core.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import junit.framework.Assert;
-import net.sf.saxon.xpath.XPathFactoryImpl;
 
 import org.auscope.portal.core.test.PortalTestClass;
 import org.auscope.portal.core.test.ResourceUtil;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  * Unit tests for DOMUtil
- * 
+ *
  * @author Josh Vote
  *
  */
 public class TestDOMUtil extends PortalTestClass {
     /**
      * Simple test to ensure that the 2 DOM util methods are reversible
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -53,7 +44,7 @@ public class TestDOMUtil extends PortalTestClass {
 
     /**
      * Namespace for use with src/test/resources/TestXML_NoPrettyPrint.xml
-     * 
+     *
      * @author vot002
      *
      */
@@ -69,7 +60,7 @@ public class TestDOMUtil extends PortalTestClass {
 
         /**
          * This method returns the uri for all prefixes needed.
-         * 
+         *
          * @param prefix
          * @return uri
          */
@@ -97,7 +88,7 @@ public class TestDOMUtil extends PortalTestClass {
 
     /**
      * Simple test to ensure that the DOM object is namespace aware
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -108,7 +99,7 @@ public class TestDOMUtil extends PortalTestClass {
         Document doc = DOMUtil.buildDomFromString(originalXmlString);
 
         //Build our queries (namespace aware)
-        XPathFactory factory = new XPathFactoryImpl();
+        XPathFactory factory = DOMUtil.getXPathFactory();
         XPath xPath = factory.newXPath();
         xPath.setNamespaceContext(new SimpleXMLNamespace());
         XPathExpression getChild1Expr = xPath.compile("test:root/test2:child1");

@@ -18,7 +18,7 @@ import org.auscope.portal.core.util.FileIOUtil;
 
 /**
  * Class for performing XSLT Transformations
- * 
+ *
  * @author Josh Vote
  *
  */
@@ -29,7 +29,7 @@ public class PortalXSLTTransformer {
 
     /**
      * Creates a new instance of this class for transforming using a single XSLT
-     * 
+     *
      * @param xsltResourceName
      *            The name of the resource (relative to this class)
      */
@@ -39,7 +39,7 @@ public class PortalXSLTTransformer {
 
     /**
      * Utility for creating an instance of the Transformer class
-     * 
+     *
      * @param xslt
      *            The style sheet contents that will form the basis of the transformer
      * @param stylesheetParams

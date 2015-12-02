@@ -333,10 +333,23 @@
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
         </dependency>
+        <!-- For the DOM -->
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.11.0</version>
+        </dependency>
+        <!-- For the XPath -->
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.2</version>
+        </dependency>
+        <!-- For the transformer factory -->
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>8.7</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -376,11 +389,6 @@
             <artifactId>json-lib</artifactId>
             <version>2.4</version>
             <classifier>jdk15</classifier>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-xom</artifactId>
-            <version>8.7</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -465,18 +473,6 @@
             <groupId>edu.ucar</groupId>
             <artifactId>netcdf</artifactId>
             <version>4.2</version>
-            <optional>false</optional>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-xpath</artifactId>
-            <version>8.7</version>
-            <optional>false</optional>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.saxon</groupId>
-            <artifactId>saxon-dom</artifactId>
-            <version>8.7</version>
             <optional>false</optional>
         </dependency>
         <dependency>
