@@ -9,11 +9,13 @@ Ext.define('portal.layer.filterer.forms.WMSLayerFilterForm', {
      * Accepts a config for portal.layer.filterer.BaseFilterForm
      */
     constructor : function(config) {
-
         var filterer=config.layer.get('filterer');
 
-        var sliderHandler = function(caller, newValue) {           
-            filterer.setParameter('opacity',newValue);
+        //Only update the underlying filterer if the layer has been added to the map
+        var sliderHandler = function(caller, newValue) {    
+            if (this.layer.get('source').get('active')) {
+                filterer.setParameter('opacity',newValue);
+            }
         };
 
         if(!filterer.getParameter('opacity')){
@@ -44,7 +46,10 @@ Ext.define('portal.layer.filterer.forms.WMSLayerFilterForm', {
                         decimalPrecision : false,
                         maxValue    : 1,
                         value       : config.layer.get('filterer').getParameter('opacity'),
-                        listeners   : {changecomplete: sliderHandler}
+                        listeners   : {
+                            changecomplete: sliderHandler,
+                            scope: this
+                        }
                 }]
             }]
         });
