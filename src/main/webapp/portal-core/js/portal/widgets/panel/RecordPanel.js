@@ -147,6 +147,10 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         if (!this.items.getCount()) {
             return;
         }
+        // Check whether we're changing the active status to 'false', which means out loading status should be treated as modified.
+        if (Ext.Array.contains(modifiedFieldNames,"active") && !record.get('active')) {
+            modifiedFieldNames.push("loading");
+        }
         
         //Figure out what fields we actually need to update
         var fieldsToUpdate = [];
