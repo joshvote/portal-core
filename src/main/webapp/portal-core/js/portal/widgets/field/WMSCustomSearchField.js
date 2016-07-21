@@ -76,6 +76,7 @@ Ext.define('portal.widgets.field.WMSCustomSearchField', {
         if (weakCheck==true) {
           proxy.extraParams['weakCheck'] = 'Y';
         }
+        store.group("contactOrg");
         store.loadPage(1);
         store.on('load',function(store, records, successful, eOpts){
             //VT:tracking            
