@@ -16,6 +16,7 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         childPanelGenerator: Ext.emptyFn
     },
     
+    
     toolFieldMap: null, //A map of tool config objects keyed by field name
     recordRowMap: null, //A map of RecordRowPanel itemId's keyed by their recordId
     
@@ -26,7 +27,9 @@ Ext.define('portal.widgets.panel.RecordPanel', {
      *  titleField: String - The field in store's underlying data model that will populate the title of each record
      *  titleIndex: Number - The 0 based index of where the title field will fit in amongst tools (default - 0)
      *  tools: Object[] - The additional tool columns, each bound to fields in the underlying data model
-     *             field - String -The field name in the model to bind this tool icon to
+     *             field - Array/String - The field name in the model to bind this tool icon to. 
+     *                                    Can be an array of field names in which case changes to any field in this array will trigger an update of the renderer/tip
+     *                                    All callback function values will be the field value for the first element in the array (the primary field)
      *             stopEvent: Boolean - If true, click events will not propogate upwards from this tool.
      *             clickHandler - function(value, record) - Called whenever this tool is clicked. No return value.
      *             doubleClickHandler - function(value, record) - Called whenever this tool is clicked. No return value.
@@ -61,6 +64,14 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         });
     },
 
+    _getPrimaryField: function(toolCfg) {
+        if (Ext.isArray(toolCfg.field)) {
+            return toolCfg.field[0];
+        } else {
+            return toolCfg.field;
+        }
+    },
+    
     /**
      * Populates toolFieldMap with the contents of the current tool config
      */
@@ -68,11 +79,20 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         this.toolFieldMap = {};
         
         Ext.each(this.tools, function(toolCfg) {
-            if (Ext.isEmpty(this.toolFieldMap[toolCfg.field])) {
-                this.toolFieldMap[toolCfg.field] = toolCfg;
-            } else {
-                throw 'Multiple tools with the same field value unsupported';
+            toolCfg.toolId = Ext.id(null, 'recordpanel-tool-'); //assign each tool a unique ID
+            
+            var fields = toolCfg.field;
+            if (!Ext.isArray(fields)) {
+                fields = [fields];
             }
+            
+            Ext.each(fields, function(field) {
+                if (Ext.isEmpty(this.toolFieldMap[field])) {
+                    this.toolFieldMap[field] = [toolCfg];
+                } else {
+                    this.toolFieldMap[field].push(toolCfg);
+                }
+            }, this);
         }, this);
     },
     
@@ -119,28 +139,32 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         
         //Install a unique tooltip for each tool
         Ext.each(this.tools, function(tool) {
-            recordRowPanel.tipMap[tool.field] = Ext.create('Ext.tip.ToolTip', {
-                target: recordRowPanel.getHeader().down('#' + tool.field).getEl(),
+            var primaryField = this._getPrimaryField(tool);
+            
+            recordRowPanel.tipMap[tool.toolId] = Ext.create('Ext.tip.ToolTip', {
+                target: recordRowPanel.getHeader().down('#' + tool.toolId).getEl(),
                 trackMouse: true,
                 listeners: {
                     beforeshow: function(tip) {
-                        var content = tool.tipRenderer(record.get(tool.field), record, tip);
+                        var content = tool.tipRenderer(record.get(primaryField), record, tip);
                         tip.update(content);
                     }
                 }
             });
-        });
+        }, this);
         
         //Ensure we destroy the tips if we remove this panel
         recordRowPanel.on('destroy', function(recordRowPanel) {
-            for (var key in recordRowPanel.tipMap) {
-                recordRowPanel.tipMap[key].destroy();
+            for (var toolId in recordRowPanel.tipMap) {
+                recordRowPanel.tipMap[toolId].destroy();
             }
             recordRowPanel.tipMap = {};
         });
     },
     
     /**
+
+
      * Handle updating renderers/tips for the modified fields
      */
     onStoreUpdate: function(store, record, operation, modifiedFieldNames, details) {
@@ -153,13 +177,17 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         }
         
         //Figure out what fields we actually need to update
-        var fieldsToUpdate = [];
+        var toolsToUpdate = {}; //Tools that require updates keyed by toolId 
+        var anyToolsToUpdate = false;
         Ext.each(modifiedFieldNames, function(modifiedField) {
             if (!Ext.isEmpty(this.toolFieldMap[modifiedField])) {
-                fieldsToUpdate.push(modifiedField);
+                Ext.each(this.toolFieldMap[modifiedField], function(toolCfg) {
+                    toolsToUpdate[toolCfg.toolId] = toolCfg;
+                    anyToolsToUpdate = true;
+                }, this);
             }
         }, this);
-        if (Ext.isEmpty(fieldsToUpdate)) {
+        if (!anyToolsToUpdate) {
             return;
         }
         
@@ -170,13 +198,13 @@ Ext.define('portal.widgets.panel.RecordPanel', {
             return;
         }
         
-        Ext.each(fieldsToUpdate, function(field) {
-            var tool = this.toolFieldMap[field];
-            var img = recordRowPanel.down('#' + field);
-            var newSrc = tool.iconRenderer(record.get(field), record);
-            
+        for (var toolId in toolsToUpdate) {
+            var tool = toolsToUpdate[toolId];
+            var primaryField = this._getPrimaryField(tool);
+            var img = recordRowPanel.down('#' + toolId);
+            var newSrc = tool.iconRenderer(record.get(primaryField), record);
             img.setSrc(newSrc);
-        }, this);
+        }
     },
 
     /**
