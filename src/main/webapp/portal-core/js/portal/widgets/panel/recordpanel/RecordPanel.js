@@ -4,7 +4,7 @@
  * 
  * The old grid panel was deprecated as part of AUS-2685
  */
-Ext.define('portal.widgets.panel.RecordPanel', {
+Ext.define('portal.widgets.panel.recordpanel.RecordPanel', {
     extend : 'Ext.panel.Panel',
     xtype : 'recordpanel',
     
@@ -101,7 +101,7 @@ Ext.define('portal.widgets.panel.RecordPanel', {
      */
     _eachGroup: function(callback, scope) {
         this.items.each(function(recordGroupPanel) {
-            if (recordGroupPanel instanceof portal.widgets.panel.RecordGroupPanel) { 
+            if (recordGroupPanel instanceof portal.widgets.panel.recordpanel.GroupPanel) { 
                 callback.call(scope, recordGroupPanel);
             }
         });
@@ -113,11 +113,12 @@ Ext.define('portal.widgets.panel.RecordPanel', {
     _eachRow: function(callback, scope) {
         this._eachGroup(function(recordGroupPanel) {
             recordGroupPanel.items.each(function(recordRowPanel) {
-                if (recordRowPanel instanceof portal.widgets.panel.RecordRowPanel) {
+                    if (recordRowPanel instanceof portal.widgets.panel.recordpanel.RowPanel) {
                     callback.call(scope, recordRowPanel);
                 }
             });
         });
+
     },
     
     /**
@@ -264,7 +265,7 @@ Ext.define('portal.widgets.panel.RecordPanel', {
         //our #collapsedtarget hidden items from CollapsedAccordianLayout
         for (var i = this.items.getCount() - 1; i >= 0; i--) {
             var item = this.items.getAt(i);
-            if (item instanceof portal.widgets.panel.RecordGroupPanel) {
+            if (item instanceof portal.widgets.panel.recordpanel.AbstractChild) {
                 this.remove(item);
             }
         }
