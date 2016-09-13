@@ -289,7 +289,7 @@ Ext.define('portal.widgets.panel.recordpanel.RecordPanel', {
             });
         } else {
             this.items.each(function(recordRowPanel) {
-                if (recordRowPanel instanceof portal.widgets.panel.RecordRowPanel) { 
+                if (recordRowPanel instanceof portal.widgets.panel.recordpanel.RowPanel) { 
                     callback.call(scope, recordRowPanel);
                 }
             });
@@ -344,11 +344,12 @@ Ext.define('portal.widgets.panel.recordpanel.RecordPanel', {
     _generateRecordRowConfig: function(record, groupMode) {
         var tools = [];
         Ext.each(this.tools, function(tool) {
-            var fieldValue = record.get(tool.field);
-            var clickBind = Ext.isEmpty(tool.clickHandler) ? null : Ext.bind(this._clickMarshaller, this, [record, tool.field, tool.clickHandler], false);
-            var doubleClickBind = Ext.isEmpty(tool.doubleClickHandler) ? null : Ext.bind(this._clickMarshaller, this, [record, tool.field, tool.doubleClickHandler], false);
+            var field = this._getPrimaryField(tool);
+            var fieldValue = record.get(field);
+            var clickBind = Ext.isEmpty(tool.clickHandler) ? null : Ext.bind(this._clickMarshaller, this, [record, field, tool.clickHandler], false);
+            var doubleClickBind = Ext.isEmpty(tool.doubleClickHandler) ? null : Ext.bind(this._clickMarshaller, this, [record, field, tool.doubleClickHandler], false);
             tools.push({
-                itemId: tool.field,
+                itemId: tool.toolId,
                 stopEvent: tool.stopEvent,
                 clickHandler: clickBind,
                 doubleClickHandler: doubleClickBind,
@@ -469,10 +470,6 @@ Ext.define('portal.widgets.panel.recordpanel.RecordPanel', {
     onStoreUpdate: function(store, record, operation, modifiedFieldNames, details) {
         if (!this.items.getCount()) {
             return;
-        }
-        // Check whether we're changing the active status to 'false', which means out loading status should be treated as modified.
-        if (Ext.Array.contains(modifiedFieldNames,"active") && !record.get('active')) {
-            modifiedFieldNames.push("loading");
         }
 
         //Figure out what fields we actually need to update
